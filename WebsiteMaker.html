@@ -1,0 +1,1372 @@
+<!-- Declare doctype -->
+<!DOCTYPE html>
+
+<!-- HTML -->
+<html lang="en">
+	
+	<!-- Manage pre-loaded website data -->
+	<head>
+		
+		<!-- Title the webpage maker -->
+		<title>Calin's Website Maker (v0.1.4)</title>
+		
+		<!-- Set the charset -->
+		<meta charset="UTF-8">
+		
+		<!-- Leave a note of who created this site and what it's for -->
+		<meta name="author" content="Calin. Z. Baenen.">
+		<meta name="description" content="Simple to use website maker!">
+		
+		<!-- Pre-website scripts -->
+		<script>
+			
+			// Disable the context menu
+			document.oncontextmenu = function() {
+				
+				/*
+					Return false so a context menu can't be created
+					(a custom one will be made later in the program)
+				*/
+				return false
+				
+			}
+			
+			// Make a binding for element names, and the real html element
+			const hash = Object.freeze({
+				"panel": "div",
+				"text": "h1",
+				"url": "a"
+			})
+			
+			// Log a message in the console
+			console.log("%cHello, welcome to Calin's Website Maker\
+ a simple to use tool, based off the UI design of the famous Nintendo game\
+ Super Mario Maker. This is meant to help get most of the dirty work of creating a\
+ website done, it is not intended to make a full on website, but if done, please credit\
+ this maker, as it leaves no water-mark.","color:black; font-weight:bolder;\
+font-size:20px;")
+			
+		</script>
+		
+		<!-- Style the page -->
+		<style>
+			
+			/* Style all elements */
+			* {
+				
+				position:absolute;
+				min-width:1px;
+				min-height:1px;
+				image-rendering:pixelated !important;
+				user-select:none;
+				-webkit-user-select:none;
+				-moz-user-select:none;
+				outline:none;
+				font-weight:bold;
+				
+			}
+			
+			/* Set the cursor */
+			html {
+				
+				cursor:url("resources/textures/cursor.png"), default;
+				
+			}
+			
+			/* Constol the size of the img alt text size */
+			img {
+				
+				font-size:15px;
+				font-weight:bolder;
+				
+			}
+			
+			/* Stylize the display of the main (hosting) webpage */
+			body {
+				
+				content:"";
+				background-color:#fbd000;
+				background:url("resources/textures/background_clear.png");
+				overflow-x:hidden;
+				
+			}
+			
+			/* Input cursor */
+			input {
+				
+				cursor:url("resources/textures/cursor.png"), default;
+				
+			}
+			
+			/* Button cursor */
+			button {
+				
+				cursor:url("resources/textures/cursor.png"), default;
+				
+			}
+			
+			/* The designers page canvas */
+			#webcanvas {
+				
+				background-color:white;
+				background:white;
+				width:100vw;
+				height:100vh;
+				top:calc(9vh - 8px);
+				left:-8px;
+				overflow:hidden;
+				
+			}
+			
+			/* Style all elements in webcanvas to match blank html */
+			#webcanvas * {
+				
+				image-rendering:unset;
+				position:absolute;
+				background-color:transparent;
+				background:unset;
+				user-select:unset;
+				-moz-user-select:unset;
+				-webkit-user-select:unset;
+				
+			}
+			
+			/* Toolbar */
+			#toolbar {
+				
+				background-color:#3366ff;
+				width:1000vw;
+				height:calc(9.95vh + 1px);
+				top:-8px;
+				left:-8px;
+				z-index:2;
+				position:fixed;
+				
+			}
+			
+			/* Toolbar items */
+			.tbitem {
+				
+				top:13%;
+				border-radius:15px;
+				background-color:white;
+				min-width:10px;
+				min-height:10px;
+				width:4vw;
+				height:75%;
+				overflow:hidden;
+				
+			}
+			
+			/* Selectable items */
+			.item {
+				
+				top:10%;
+				border-radius:15px;
+				background-color:white;
+				min-width:10px;
+				min-height:10px;
+				width:4vw;
+				height:75%;
+				overflow:hidden;
+				
+			}
+			
+			/* If an item is active, make it a gray reduce it's brightness */
+			.item:active {
+				
+				filter:brightness(75%);
+				
+			}
+			
+			/* Darken the item when hovered, to indicate it's being hovered */
+			.item:hover {
+				
+				filter:brightness(75%);
+				
+			}
+			
+			/* InnerCentered elements (for items) */
+			.in {
+				
+				top:25%;
+				left:10%;
+				
+			}
+			
+			/* DivTool positioning */
+			#div {
+				
+				left:3vw;
+				
+			}
+			
+			/* TextTool positioning */
+			#text {
+				
+				left:8vw;
+				
+			}
+			
+			/* Reset positioning */
+			#reset {
+				
+				left:80vw;
+				
+			}
+			
+			/* Preview positioning */
+			#preview {
+				
+				left:85vw;
+				
+			}
+			
+			/* Highlight positioning */
+			#highlight {
+				
+				left:90vw;
+				
+			}
+			
+			/* Unselect positioning */
+			#unselect {
+				
+				left:95vw;
+				
+			}
+			
+			/* Input menus */
+			.menu {
+				
+				display:none;
+				background-color:white;
+				background:white;
+				border-color:black;
+				border-width:2px;
+				border-style:solid;
+				width:30vw;
+				height:30vh;
+				z-index:1;
+				top:25vh;
+				left:25vw;
+				overflow:hidden;
+				position:fixed;
+				
+			}
+			
+			/* Context menu */
+			.ctxmenu {
+				
+				width:45vw;
+				height:7vh;
+				z-index:1;
+				display:none;
+				background-color:white;
+				background:white;
+				position:fixed;
+				
+			}
+			
+			/* Accept buttons */
+			.accept {
+				
+				border-radius:15px;
+				border-color:transparent;
+				background-color:#33bb77;
+				background:#33bb77;
+				
+			}
+			
+			/* Accept buttons (when clicked) */
+			.accept:active {
+				
+				background-color:#119966;
+				background:#119966;
+				
+			}
+			
+			/* Reject buttons */
+			.reject {
+				
+				border-radius:15px;
+				border-color:transparent;
+				background-color:#bb3377;
+				background:#bb3377;
+				
+			}
+			
+			/* Reject buttons (when clicked) */
+			.reject:active {
+				
+				background-color:#991166;
+				background:#991166;
+				
+			}
+			
+			/* Give elements small borders */
+			.sbrdr {
+				
+				border-style:solid;
+				border-color:black;
+				border-width:1px;
+				
+			}
+			
+			/* Highlight class */
+			.debug_highlight {}
+			
+			/* Highlight class (when hovered) */
+			.debug_highlight:hover {
+				
+				filter:brightness(60%);
+				
+			}
+			
+		</style>
+		
+	</head>
+	
+	<!-- Content of the page -->
+	<body>
+		
+		<!-- Color input menu -->
+		<div id="color-in" class="menu">
+			
+			<!-- Cancel button -->
+			<button class="reject" style="top:90%; left:1%">
+				
+				Cancel
+				
+			</button>
+			
+			<!-- Accept button -->
+			<button class="accept" style="top:90%; left:91%;">
+				
+				OK
+				
+			</button>
+			
+			<!-- Input (color) -->
+			<input value="#ffffff" type="color" name="colorinput" id="input_color" style="top:40%; left:40%">
+			
+		</div>
+		
+		<!-- The size input menu -->
+		<div id="size-in" class="menu">
+			
+			<!-- Cancel button -->
+			<button class="reject" style="top:90%; left:1%">
+				
+				Cancel
+				
+			</button>
+			
+			<!-- Accept button -->
+			<button class="accept" style="top:90%; left:91%;">
+				
+				OK
+				
+			</button>
+			
+			<!-- Input (size) -->
+			<input placeholder="Width" value="10" type="number" name="sizewidthinput" id="input_size_1" style="top:20%; left:40%;">
+			<input placeholder="Height" value="10" type="number" name="sizeheightinput" id="input_size_2" style="top:40%; left:40%;">
+			<input placeholder="Units" value="@r" type="text" name="sizeunitsinput" id="input_size_3" style="top:60%; left:40%;" maxlength="2">
+			
+		</div>
+		
+		<!-- Text input -->
+		<div id="text-in" class="menu">
+			
+			<!-- Cancel button -->
+			<button class="reject" style="top:90%; left:1%">
+				
+				Cancel
+				
+			</button>
+			
+			<!-- Accept button -->
+			<button class="accept" style="top:90%; left:91%;">
+				
+				OK
+				
+			</button>
+			
+			<!-- Input for text and text size -->
+			<input type="text" name="textinput" id="input_text_1" style="top:40%; left:40%" placeholder="Message">
+			<input type="number" name="textsizeinput" id="input_text_2" style="top:30%; left:40%;" value="-1" placeholder="Font Size">
+			
+		</div>
+		
+		<!-- Context menu -->
+		<div id="ctx-in" class="ctxmenu" style="top:10vh; left:0.5vw;">
+			
+			<!-- Exit the context menu -->
+			<div class="item sbrdr" style="background-color:red; color:white; left:3%" title="Close">
+				
+				<!-- Exit text (X) -->
+				<p style="font-family:'arial'; position:absolute; top:-10%; left:40%;">X</p>
+				
+			</div>
+			
+			<!-- Color input -->
+			<div class="item sbrdr" title="Color" style="left:13%;">
+				
+				<!-- Color input texture -->
+				<img width="50" height="40" alt="Color input" src="resources/textures/color_icon.png">
+				
+			</div>
+			
+			<!-- Size input -->
+			<div class="item sbrdr" title="Size" style="left:23%;">
+				
+				<!-- Resize input texture -->
+				<img width="50" height="40" alt="Resize input" src="resources/textures/resize.png">
+				
+			</div>
+			
+			<!-- Text input -->
+			<div class="item sbrdr" title="Text" style="left:33%;">
+				
+				<!-- Text input texture -->
+				<img width="50" height="40" alt="Text input" src="resources/textures/text.png">
+				
+			</div>
+			
+			<!-- Transparency -->
+			<div class="item sbrdr" title="Camo mode" style="left:43%;">
+				
+				<!-- Transparency texture -->
+				<img width="50" height="40" alt="Camo mode" src="resources/textures/transparent.png">
+				
+			</div>
+			
+			<!-- Toggle shadows option -->
+			<div class="item sbrdr" title="Shadows" style="left:53%;">
+				
+				<!-- Shadows texture -->
+				<img width="50" height="40" alt="Shadows toggle" src="resources/textures/shadow.png">
+				
+			</div>
+			
+			<!-- Delete the current item -->
+			<div class="item sbrdr" title="Delete" style="left:63%;">
+
+				<!-- Delete image -->
+				<img width="50" height="40" alt="Delete" src="resources/textures/delete.png">
+
+			</div>
+
+		</div>
+		
+		<!-- Toolbar to add things -->
+		<div id="toolbar" tabindex="0">
+			
+			<!-- Div tool -->
+			<div onclick="setActiveItem('panel')" name="panel" class="tbitem" id="div" title="Panel" tabindex="2">
+				
+				<!-- Div tool texture -->
+				<img alt="Panel" width="50" height="30" src="resources/textures/panel.png" class="in">
+				
+			</div>
+			
+			<!-- Text tool -->
+			<div onclick="setActiveItem('text')" name="text" class="tbitem" id="text" title="Text" tabindex="3">
+				
+				<!-- Text tool texture -->
+				<img alt="Text" width="50" height="30" src="resources/textures/text.png" class="in">
+				
+			</div>
+			
+			<!-- Reset button -->
+			<div onclick="reset()" class="tbitem" id="reset" title="Reset">
+				
+				<!-- Reset button texture -->
+				<img atl="Reset" width="50" height="50" src="resources/textures/reset.png" class="in">
+				
+			</div>
+			
+			<!-- Preview  button -->
+			<div onclick="preview()" class="tbitem" id="preview" title="Preview">
+				
+				<!-- Preview button texture -->
+				<img alt="Preview" width="50" height="50" src="resources/textures/preview.png" class="in">
+				
+			</div>
+			
+			<!-- Hightlight / Unhighlight elements -->
+			<div onclick="highlight(true)" class="tbitem" id="highlight" title="Highlight">
+				
+				<!-- Highlight texture -->
+				<img alt="Highlight" width="50" height="50" src="resources/textures/highlight.png" class="in">
+				
+			</div>
+			
+			<!-- Unselect option -->
+			<div onclick="setActiveItem()" class="tbitem" id="unselect" title="Unselect" tabindex="1">
+				
+				<!-- Cursor texture -->
+				<img alt="Cursor" width="50" height="50" src="resources/textures/cursor.png" class="in">
+				
+			</div>
+			
+		</div>
+		
+		<!-- The canvas -->
+		<div id="webcanvas">
+		</div>
+		
+		<!-- Mid-website scripts -->
+		<script>
+			
+			// The element the mouse is over
+			let __GLOBAL_currElement__ = null
+			
+			// Reset button
+			const resetbutton = document.getElementById("reset")
+
+			// Set the context menu of the reset button to the softreset function
+			resetbutton.oncontextmenu = function() {
+
+				// Soft reset
+				softreset()
+
+			}
+
+			// Get the web canvas
+			const canvas = document.getElementById("webcanvas")
+
+			// Get the html for the entire page
+			const html = (((
+				document.head || document.getElementByTagName("head")[0]
+			).parentNode) || document.getElementById("html")[0])
+
+			// Set an interval to set the cursor
+			const __cur_cursor_loop__ = setInterval(function() {
+
+				// Set the cursor
+				html.style.cursor = "url('resources/textures/cursor.png'), default"
+
+			},10)
+
+			// The global selected item
+			let __global_selected__ = null
+			window.__global_selected__ = null
+			
+			// View height
+			const vh = function vh(v=100) {
+				let h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
+				return (v * h) / 100
+			}
+			
+			// View width
+			const vw = function vw(v=100) {
+				let w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
+				return (v * w) / 100
+			}
+			
+			// Reset the canvas
+			const reset = function() {
+				
+				// Ask if the user wants to reset the canvas
+				if(confirm("Reset the canvas to it's original state?")) {
+					
+					// Remove all the elements from the canvas
+					canvas.innerHTML = ""
+					canvas.innerText = ""
+					
+					// Make the canvas white again
+					canvas.style.backgroundColor = "white"
+					canvas.style.background = "white"
+					
+					// Return true (reset the canvas)
+					return true
+					
+				}
+				
+				// Return false (kept the canvas)
+				return false
+				
+			}
+
+			// Soft reset
+			const softreset = function() {
+
+				// Ask if the user wants to clear the canvas
+				if(confirm("Clear the canvas?")) {
+					
+					// Remove all the elements from the canvas
+					canvas.innerHTML = ""
+					canvas.innerText = ""
+					
+					// Return true (reset the canvas)
+					return true
+					
+				}
+				
+				// Return false (kept the canvas)
+				return false
+				
+			}
+			
+			// Preview the website
+			const preview = function() {}
+			
+			// Get the highlight button
+			const highlight_button = document.getElementById("highlight")
+			const highlight_icon = highlight_button.getElementsByTagName("img")[0]
+			
+			// The interval for highlighting
+			let __GLOBAL_highlight_interval__ = 0
+			window.__GLOBAL_highlight_interval__ = 0
+			
+			// Highlight or don't highlight elements when hovered over
+			const highlight = function(active=false) {
+				
+				// See if it should be active or not
+				if(active) {
+					
+					// Set the icon, it's alt, and the title
+					highlight_icon.src = "resources/textures/unhighlight.png"
+					highlight_icon.alt = "Unhighlight"
+					highlight_button.title = "Unhighlight"
+					
+					// Set the onclick function for the highlight button
+					highlight_button.onclick = function() {
+						
+						// Run the highlight function again, but with false instead
+						highlight(false)
+						
+					}
+					
+					// Let all the elements get the "debug_highlight" class
+					for(const child of canvas.children) {
+						
+						// Set the class
+						child.className = "debug_highlight"
+						
+					}
+					
+					// Set an intervak
+					__GLOBAL_highlight_interval__ = setInterval(function() {
+						
+						// Highlight new elements
+						for(const child of canvas.children) {
+							
+							// Set the class
+							child.className = "debug_highlight"
+							
+						}
+						
+					},100)
+					window.__GLOBAL_highlight_interval__ = __GLOBAL_highlight_interval__
+					
+					// Return true
+					return true
+					
+				}
+				
+				// Clear the interval
+				clearInterval(
+					__GLOBAL_highlight_interval__ || window.__GLOBAL_highlight_interval__
+				)
+				
+				// Set the interval numbers to 0
+				__GLOBAL_highlight_interval__ = 0
+				window.__GLOBAL_highlight_interval__ = 0
+				
+				// Set the icon, it's alt, and the title
+				highlight_icon.src = "resources/textures/highlight.png"
+				highlight_icon.alt = "Highlight"
+				highlight_button.title = "Highlight"
+				
+				// Set the onclick function for the highlight button
+				highlight_button.onclick = function() {
+					
+					// Run the highlight function again, but with true
+					highlight(true)
+					
+				}
+					
+				// Remove the class
+				for(const child of canvas.children) {
+					
+					// Remove the class
+					child.className = ""
+					
+				}
+				
+				// Return true
+				return true
+				
+			}
+			
+			// The current mouse position
+			let mouseX = 0
+			let mouseY = 0
+			
+			// Get the context menu
+			const ctx = document.getElementById("ctx-in")
+			
+			// Get the current position of the mouse
+			canvas.onmousemove = function(event=null) {
+				
+				// Test to see if an event was passed
+				if(event !== null) {
+					
+					// Set the current highlighted element
+					__GLOBAL_currElement__ = event.target
+					
+					// Set the mouse coordinates
+					mouseX = event.clientX
+					mouseY = event.clientY
+					
+					// Return true (success)
+					return true
+					
+				}
+				
+				// Return false (fail)
+				return false
+				
+			}
+			
+			// A context menu for elements
+			const ctxmenu = function(element=null) {
+				
+				// Make the context menu visible
+				ctx.style.display = "block"
+				
+				// Reset the context menu
+				const resetCtx = function() {
+					
+					// Loop through each child
+					for(const opt of ctx.children) {
+						
+						// Set the onclick event to a blank function
+						opt.onclick = function() {}
+						
+					}
+					
+				}
+				
+				// Clear the context menu
+				resetCtx()
+				
+				// If there is no element input, return false
+				if(!element || element === null) {
+					
+					// Make the menu invisible
+					ctx.style.display = "none"
+					
+					// fail
+					return false
+					
+				}
+				
+				// The current index
+				let active_index = 0
+				
+				// Set the action input's target element
+				for(const opt of ctx.children) {
+					
+					// Get the ass function
+					let func = ctxFuncs[active_index]
+					
+					// Turn to blank function if 'func' is not a function
+					if(typeof func !== "function") {
+						
+						// Reset 'func'
+						func = function(){}
+						
+					}
+					
+					// Use the ctx-menu order to grab the function
+					opt.onclick = function() {
+						
+						// Call the function assigned to the option
+						func(element)
+						
+						// Make the context menu invisible
+						ctx.style.display = "none"
+						
+					}
+					
+					// Increase the index
+					active_index++
+					
+				}
+				
+				// Return true (success)
+				return true
+				
+			}
+			
+			// Add an element when an element is selected and an element is clicked
+			const placeElement = function(event=null,parent=null,x=null,y=null) {
+				
+				// If there is no parent don't place
+				if(!parent) {
+					
+					// Fail
+					return false
+					
+				}
+				
+				// Element type (default: div)
+				let _element_type_ = "div"
+				
+				// Check if an element is selected
+				if(typeof __global_selected__ === "string" && __global_selected__) {
+					
+					// Check if either is declared
+					if(window.__global_selected__ || __global_selected__ && parent) {
+						
+						// Get the element
+						_element_type_ = hash[
+							window.__global_selected__ || __global_selected__
+						]
+						
+					}
+					
+					// If global selected is null, stop it from making an element
+					if(!__global_selected__ || !window.__global_selected__) {
+						
+						// Failsafe (nothing selected)
+						return false
+						
+					}
+					
+					// Make the element
+					const element = document.createElement(_element_type_)
+					
+					// Give the element a context menu
+					element.oncontextmenu = function() {
+						
+						// Call the context menu with the elemenet
+						ctxmenu(element)
+						
+					}
+
+					// Give the element sub-element compatibility
+					element.onclick = function(event) {
+
+						// Handle the event like the canvas would handle it
+						placeElement(
+							event,
+							element,
+							(mouseX-(element.style.width/2))+"px",
+							(mouseY-(element.style.height/2))+"px"
+						)
+
+					}
+					
+					/*
+						Set the default background and background color for the
+						element
+					*/
+					element.style.backgroundColor = "white"
+					element.style.background = "white"
+					
+					// Set the element's default width/height
+					element.style.width = "10vw"
+					element.style.height = "10vh"
+					
+					// Set the element at the mouse's position
+					element.style.position = "absolute"
+					element.style.top = y || ((mouseY-vh(8.666666666666666666666))+"px")
+					element.style.left = x || (mouseX+"px")
+					element.style.overflow = "hidden"
+					
+					// Place the element on the cavas if there is a selected element
+					if(
+						__global_selected__ || window.__global_selected__
+					) parent.appendChild(element)
+					
+					//
+					
+					// Tne parent element's (if there is one) primary functions
+					const parent_oncontextmenu = element.parentElement.oncontextmenu
+					const parent_onclick = element.parentElement.onclick
+					
+					// Remove parent element functions, prevents "option-clipping"
+					element.onmouseover = function() {
+						
+						// Clear the canvas' context menu appearance
+						element.parentElement.oncontextmenu = function(){}
+
+						// Stop the canvas from placing elements
+						element.parentElement.onclick = function(){}
+						
+					}
+					
+					// Make functionallity reappear
+					element.onmouseout = function() {
+						
+						// Give the parent it's functionallity back
+						canvas.oncontextmenu = parent_oncontextmenu
+						canvas.onclick = parent_onclick
+						
+					}
+					
+					// There was something selected
+					return true
+					
+				}
+				
+				// Return false (there was nothing selected)
+				return false
+				
+			}
+
+			// Add elements to the canvas
+			canvas.onclick = function(event) {
+
+				// Add elements using placeElement
+				placeElement(event,canvas)
+
+			}
+			
+			// Get the color selector
+			const in_color = document.getElementById("color-in")
+			const in_color_box = document.getElementById("input_color")
+			
+			// Get the size selector
+			const in_size = document.getElementById("size-in")
+			const in_size_width = document.getElementById("input_size_1")
+			const in_size_height = document.getElementById("input_size_2")
+			const in_size_unit = document.getElementById("input_size_3")
+			
+			// Get the text selector
+			const in_text = document.getElementById("text-in")
+			const in_text_box = document.getElementById("input_text_1")
+			const in_text_size = document.getElementById("input_text_2")
+			
+			// Disguise (camouflage) the background of an element's bg
+			const camo = Object.freeze(function(element=null) {
+				
+				// If not element was given, return false
+				if(!element) {
+					
+					// Nothing was given
+					return false
+					
+				}
+				
+				// If an element was already hidden, make it appear
+				if(element.style.background === "transparent") {
+					
+					// Set the background to the bgc to make it appear
+					element.style.background = "white"
+					element.style.backgroundColor = "white"
+					
+				}
+				
+				// Make the background dissapear
+				else {
+					
+					// Set the bg to transparent
+					element.style.background = "transparent"
+					
+				}
+				
+				// An element was given
+				return true
+				
+			})
+			
+			// Toggle shadows for a given element
+			const shadow = Object.freeze(function(element=null) {
+				
+				// If the element was omitted, return false
+				if(!element) {
+					
+					// Fail
+					return false
+					
+				}
+				
+				// If the element alreadt has shadows remove them, else add them
+				if(element.style.boxShadow) {
+					
+					// Reset the shadows
+					element.style.boxShadow = ""
+					
+				} else {
+					
+					// Give the element shadows
+					element.style.boxShadow = "rgba(0,0,0,0.5) 1vw 1vw"
+					
+				}
+				
+				// Success
+				return true
+				
+			})
+			
+			// Convert CSS's "RGB" strings into hex
+			const CSStoHex = Object.freeze(function(CSSrgbstring=null) {
+				
+				// Add some default CSS colors
+				if(CSSrgbstring === "white") CSSrgbstring = "rgb(255,255,255)"
+				if(CSSrgbstring === "black") CSSrgbstring = "rgb(0,0,0)"
+				
+				// If the string is blank, or is not a string, return false
+				if(!CSSrgbstring || typeof CSSrgbstring !== "string") {
+					
+					// Failed
+					return false
+					
+				}
+				
+				// Allowed numbers, plus comma
+				const allowed = "1234567890,"
+				
+				// Find the values using a "finder" string
+				let finder = ""
+				
+				// Scan the string for mumerics, plus seperating comma
+				for(const char of CSSrgbstring.split("")) {
+					
+					// If the character is allowed, add it the the finder string
+					if(allowed.includes(char)) finder += char
+					
+				}
+				
+				// Split the string by the comma to get the RGB value array
+				const rgbArr = Object.seal([...finder.split(",")])
+				
+				// Make all the values integer
+				rgbArr.forEach(function(v,i) {
+					
+					// Set the current index to the value parsed as an int
+					rgbArr[i] = parseInt(v,10)
+					
+				})
+				
+				// Iterate through the list and do number conversion
+				rgbArr.forEach(function(v,i) {
+					
+					// Convert the number into hex
+					let hex = v.toString(16)
+					
+					// Do 0 padding
+					if(hex.length === 1) hex = ("0"+hex)
+					
+					// Set the current index to the hex
+					rgbArr[i] = hex
+					
+				})
+				
+				// Success
+				return ("#"+(rgbArr.join(""))).slice(0,7)
+				
+			})
+			
+			// Give the color input functionallity
+			const colorInput = Object.freeze(function(element=null) {
+				
+				// If there is no element return false
+				if(!element) {
+					
+					// Fail
+					return false
+					
+				}
+				
+				// Set the default value for color input
+				in_color_box.value = CSStoHex(element.style.backgroundColor) || "#ffffff"
+				
+				// Closing operation
+				const closeOperation = Object.freeze(function() {
+					
+					// Set the display to none
+					in_color.style.display = "none"
+					
+				})
+				
+				// Make the color input visible
+				in_color.style.display = "block"
+				
+				// Color change rejection
+				in_color.getElementsByClassName("reject")[0].onclick = function() {
+					
+					// Reset the onclick events
+					in_color.getElementsByClassName("reject")[0].onclick = function(){}
+					in_color.getElementsByClassName("accept")[0].onclick = function(){}
+					
+					// Close the input
+					closeOperation()
+					
+				}
+				
+				// Color change acception
+				in_color.getElementsByClassName("accept")[0].onclick = function() {
+					
+					// Reset the onclick events
+					in_color.getElementsByClassName("reject")[0].onclick = function(){}
+					in_color.getElementsByClassName("accept")[0].onclick = function(){}
+					
+					// Set the color
+					element.style.backgroundColor = in_color_box.value
+					
+					// Close the input
+					closeOperation()
+					
+				}
+				
+			})
+
+			// Delete an elemenet
+			const deleteElement = Object.freeze(function(element=null) {
+
+				// If no element was given, fail
+				if(!element) {
+
+					// Failed
+					return false
+
+				}
+
+				// Get the elements parent, then remove the element
+				element.parentElement.removeChild(element)
+
+				// Success
+				return true
+
+			})
+			
+			// Give the text input functionallity
+			const textInput = Object.freeze(function(element=null) {
+				
+				// Set the default values
+				in_text_box.value = (element.value || element.innerText) || ""
+				in_text_size.value = parseInt(String(element.style.fontSize),10) || -1
+				
+				// Check if there was a provided element
+				if(!element) {
+					
+					// Return false (there was no given element)
+					return false
+					
+				}
+				
+				// Close operation
+				const closeOperation = function() {
+					
+					// Make the input invisible
+					in_text.style.display = "none"
+					
+				}
+				
+				// Make the input visible
+				in_text.style.display = "block"
+				
+				// Text change rejection
+				in_text.getElementsByClassName("reject")[0].onclick = function() {
+					
+					// Reset the onclick events
+					in_text.getElementsByClassName("reject")[0].onclick = function(){}
+					in_text.getElementsByClassName("accept")[0].onclick = function(){}
+					
+					// Close the input
+					closeOperation()
+					
+				}
+				
+				// Size change acception
+				in_text.getElementsByClassName("accept")[0].onclick = function() {
+					
+					// Reset the onclick events
+					in_text.getElementsByClassName("reject")[0].onclick = function(){}
+					in_text.getElementsByClassName("accept")[0].onclick = function(){}
+					
+					// Set the text
+					element.innerText = in_text_box.value
+					element.value = in_text_box.value
+					
+					// If the font size is greater than, or equal to 0, change the font size
+					if(parseInt(in_text_size.value,10) > 0) {
+						
+						// Update the font size
+						element.style.fontSize = ((in_text_size.value)+"px")
+						
+					}
+					
+					// Close the input
+					closeOperation()
+					
+				}
+				
+			})
+			
+			// Give the size input functionallity
+			const sizeInput = Object.freeze(function(element=null) {
+				
+				// Set the default values
+				in_size_width.value = 10
+				in_size_height.value = 10
+				in_size_unit.value = "@r"
+				
+				// Check if there was a provided element
+				if(!element) {
+					
+					// Return false (there was no given element)
+					return false
+					
+				}
+				
+				// Close operation
+				const closeOperation = function() {
+					
+					// Make the input invisible
+					in_size.style.display = "none"
+					
+				}
+				
+				// Make the input visible
+				in_size.style.display = "block"
+				
+				// Size change rejection
+				in_size.getElementsByClassName("reject")[0].onclick = function() {
+					
+					// Reset the onclick events
+					in_size.getElementsByClassName("reject")[0].onclick = function(){}
+					in_size.getElementsByClassName("accept")[0].onclick = function(){}
+					
+					// Close the input
+					closeOperation()
+					
+				}
+				
+				// Size change acception
+				in_size.getElementsByClassName("accept")[0].onclick = function() {
+					
+					// Units
+					const u = (in_size_unit.value).trim()
+					
+					// Reset the onclick events
+					in_size.getElementsByClassName("reject")[0].onclick = function(){}
+					in_size.getElementsByClassName("accept")[0].onclick = function(){}
+					
+					// Set the size
+					element.style.width = in_size_width.value+(u === "@r" ? "vw" : u)
+					element.style.height = in_size_height.value+(u === "@r" ? "vh" : u)
+					
+					// Close the input
+					closeOperation()
+					
+				}
+				
+			})
+			
+			// Set the active item
+			const setActiveItem = function(itemname=null) {
+				
+				// Set the color of all items to white
+				for(const item of document.getElementsByClassName("tbitem")) {
+					
+					// Set the color to white (if it's not locked)
+					if(
+						!item.parentElement.className.includes("ctx") &&
+						(item.locked !== "true" || !item.locked)
+					) {
+						
+						// It wasn't locked
+						item.style.backgroundColor = "white"
+						
+					}
+					
+				}
+
+				// If the itemname is the same as it's self, unselect the item
+				if(
+					itemname === (window.__global_selected__ || __global_selected__)
+				) {
+
+					// Deselect
+					setActiveItem()
+
+					// Returm true (successfuly deselected an item)
+					return true
+
+				}
+				
+				// Get the slot of the current item
+				const selection = document.getElementsByName(itemname)[0]
+				
+				// If the selection isn't int the list reset it, return false
+				if(!selection) {
+					
+					// Reset the cursor
+					canvas.style.cursor = "url(\"resources/textures/cursor.png\")"
+					
+					// Reset the global selection
+					__global_selected__ = null
+					window.__global_selected__ = null
+					
+					// Return false
+					return false
+					
+				}
+				
+				// Set the color of the current selection to gold
+				selection.style.backgroundColor = "gold"
+
+				// Set the global selected variable
+				__global_selected__ = itemname
+				window.__global_selected__ = itemname
+				
+				// Set the cursor to be that element
+				canvas.style.cursor = `url("resources/textures/${itemname}.png\")`
+				
+				// Return true because the item exists
+				return true
+				
+			}
+			
+			// Set the webcanvas' context menu
+			canvas.oncontextmenu = function() {
+				
+				// Set the color for the canvas
+				colorInput(canvas)
+				
+			}
+			
+			// Context menu function order
+			const ctxFuncs = Object.freeze([
+				
+				// Close the ctx menu
+				function close() {
+					
+					// Clear the ctxmenu
+					ctxmenu()
+					
+				},
+				
+				// Input, and recolor an element
+				colorInput,
+				
+				// Input, and resize element
+				sizeInput,
+				
+				// Input, and set text
+				textInput,
+				
+				// Camouflage the element's background
+				camo,
+				
+				// Add / remove shadws from an element
+				shadow,
+
+				// Delete an element
+				deleteElement
+				
+			])
+			
+		</script>
+		
+	</body>
+	
+</html>
